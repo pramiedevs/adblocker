@@ -1,0 +1,3 @@
+the video container should be always visible, and load the content when the load button is pressed. as it is now it only appears when the button is clicked but nothing is there at the begginign
+also
+when a youtube video ends you get this more videos from youtube, and if you click them you are led to youtube. Is there any way that when we press those videos(links) our player loads them instead of opening on a new tab?

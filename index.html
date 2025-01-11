@@ -1,1 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Embed YouTube Video</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #video-container {
+      margin-top: 20px;
+      width: 560px;
+      height: 315px;
+      border: 1px solid #ddd;
+      background-color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 18px;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+    }
+    .install-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #0073e6;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .install-button:hover {
+      background-color: #005bb5;
+    }
+  </style>
+</head>
+<body>
+  <h1>Embed YouTube Video</h1>
+  <input type="text" id="url-input" placeholder="Paste YouTube URL here" size="50">
+  <button onclick="loadVideo()">Load Video</button>
 
+  <div id="video-container">
+    <div id="placeholder">Your video will appear here</div>
+    <div id="player"></div>
+  </div>
+
+  <!-- Install Adblock Plus Button -->
+  <button class="install-button" onclick="installAdblock()">Install Adblock Plus</button>
+
+  <script>
+    let player;
+
+    // Load the IFrame Player API asynchronously
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    // Create the YouTube player after API is ready
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '315',
+        width: '560',
+        videoId: '', // Initially no video
+        playerVars: {
+          rel: 0, // Disable related videos from showing other content
+          modestbranding: 1, // Disable YouTube logo
+        },
+        events: {
+          'onStateChange': onPlayerStateChange,
+        },
+      });
+    }
+
+    function loadVideo() {
+      const url = document.getElementById('url-input').value;
+      const videoId = getYouTubeVideoId(url);
+
+      if (videoId) {
+        player.loadVideoById(videoId); // Load the video dynamically
+        document.getElementById('placeholder').style.display = 'none'; // Hide the placeholder
+      } else {
+        alert("Invalid YouTube URL");
+      }
+    }
+
+    function getYouTubeVideoId(url) {
+      const regex = /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|\S*\?v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+      const matches = url.match(regex);
+      return matches ? matches[1] : null;
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.ENDED) {
+        alert('Video ended. Suggested videos cannot open directly here.');
+        // You can capture related video interactions, but they require extra handling
+      }
+    }
+
+    
+    function installAdblock() {
+      window.open('https://chrome.google.com/webstore/detail/adblock-plus-free-ad-bloc/cfhdojbkjhnklbpkdaibdccddilifddb', '_blank');
+    }
+  </script>
+</body>
+</html>
